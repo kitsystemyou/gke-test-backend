@@ -12,17 +12,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	// WARNING!
 	// Change this to a fully-qualified import path
 	// once you place this file into your project.
 	// For example,
+	"gke-test-backend/swagger"
 )
 
 func main() {
 	log.Printf("Server started")
 
-	router := mux.NewRouter()
+	router := swagger.NewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
