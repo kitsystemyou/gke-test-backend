@@ -1,0 +1,213 @@
+openapi: 3.0.0
+info:
+  title: character
+  description: test swagger
+  version: "1.0"
+servers:
+- url: http://localhost:3000
+paths:
+  /character/{characterId}:
+    get:
+      tags: []
+      summary: Get Character Info by Character ID
+      description: Retrieve the information of the character with the matching character
+        ID.
+      operationId: get-characters-characterId
+      parameters:
+      - name: characterId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Character Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples:
+                Get Character Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: 1997-10-31
+                    emailVerified: true
+                    signUpDate: 2019-08-24
+        "404":
+          description: Character Not Found
+    patch:
+      summary: Update Character Information
+      description: Update the information of an existing character.
+      operationId: patch-characters-characterId
+      parameters:
+      - name: characterId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Patch character properties to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/character_characterId_body'
+            examples:
+              Update First Name:
+                value:
+                  firstName: Rebecca
+              Update Email:
+                value:
+                  email: rebecca@gmail.com
+              Update Last Name & Date of Birth:
+                value:
+                  lastName: Baker
+                  dateOfBirth: 1985-10-02
+      responses:
+        "200":
+          description: Character Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples:
+                Updated Character Rebecca Baker:
+                  value:
+                    id: 13
+                    firstName: Rebecca
+                    lastName: Baker
+                    email: rebecca@gmail.com
+                    dateOfBirth: 1985-10-02
+                    emailVerified: false
+                    createDate: 2019-08-24
+        "404":
+          description: Character Not Found
+        "409":
+          description: Email Already Taken
+  /character:
+    get:
+      summary: ""
+      description: get characters
+      operationId: get-characters
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples: {}
+    post:
+      summary: Create New Character
+      description: Create a new character.
+      operationId: post-character
+      requestBody:
+        description: Post the necessary fields for the API to create a new character.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/character_body'
+            examples:
+              Create Character Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: 1996-08-24
+      responses:
+        "200":
+          description: Character Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples:
+                New Character Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: 1996-08-24
+                    emailVerified: false
+                    createDate: 2020-11-18
+        "400":
+          description: Missing Required Information
+        "409":
+          description: Email Already Taken
+components:
+  schemas:
+    Character:
+      title: Character
+      required:
+      - email
+      - emailVerified
+      - firstName
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given character.
+        characterName:
+          type: string
+        hp:
+          type: integer
+        mp:
+          type: integer
+        createDate:
+          type: string
+          description: The date that the character was created.
+          format: date
+      description: character info
+      example:
+        mp: 1
+        characterName: characterName
+        hp: 6
+        id: 0
+        createDate: 2000-01-23
+      x-examples:
+        Zelda:
+          id: 1
+          characterName: Zelda
+          hp: 30
+          mp: 30
+          createDate: 2000-01-01
+    character_characterId_body:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          description: "If a new email is given, the character's email verified property\
+            \ will be set to false."
+        dateOfBirth:
+          type: string
+    character_body:
+      required:
+      - dateOfBirth
+      - email
+      - firstName
+      - lastName
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+x-stoplight:
+  id: 5k0kybq1khef5
